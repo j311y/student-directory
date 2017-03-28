@@ -37,11 +37,13 @@ def input_students
   students
 end
 
-def print(students)
-  students.each_with_index do |student, index|
 
-    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
-  end
+def print(students)
+    students.each_with_index do |student, index|
+      if student[:name].downcase[0] == "t"
+      puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
+    end
 end
 
 def print_footer(names)
