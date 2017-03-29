@@ -12,7 +12,7 @@
 #  {name: "Joffrey Baratheon", cohort: :november},
 #  {name: "Norman Bates", cohort: :november}
 # ]
-
+@months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
 def print_header
   puts "The students of Villains Academy".center(110)
   puts "--------------------------------".center(110)
@@ -21,7 +21,14 @@ end
 def input_students
   puts "To exit hit return 3 times"
   puts "Please enter the names of the students"
-  name = gets.chomp
+  name = gets.chomp.capitalize
+  puts "Which cohort are they part of?"
+  puts "(Enter 'Month' or 'Unknown')"
+  cohort = gets.chomp.capitalize.to_sym
+    while !@months.include?(cohort)
+      puts "That is not a valid Month. Try again:"
+      cohort = gets.chomp.capitalize.to_sym
+    end
   puts "Please enter their age"
   age = gets.chomp
   puts "What are their hobbies?"
@@ -31,12 +38,20 @@ def input_students
 
   # whil the name is not empty, repeat this code
   while !name.empty? do
-    # add the student hash to the array
-    students << {name: name, age: age, hobbies: hobbies, cohort: :november}
+    # if !cohort.empty?
+      students << {name: name, age: age, hobbies: hobbies, cohort: cohort}
+    # else
+    # students << {name: name, age: age, hobbies: hobbies, cohort: :Unknown}
+    # end
     puts "Now we have #{students.count} students"
-    # get another name from the user
     puts "Next student name: "
-    name = gets.chomp
+    name = gets.chomp.capitalize
+    puts "Their cohort: "
+    cohort = gets.chomp.capitalize.to_sym
+      while !@months.include?(cohort) || cohort.empty?
+        puts "That is not a valid Month. Try again:"
+        cohort = gets.chomp.capitalize.to_sym
+      end
     puts "Age: "
     age = gets.chomp
     puts"Hobbies: "
@@ -50,7 +65,7 @@ end
 def print(students)
     index = 0
     until index == students.count
-      puts "#{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(30)} | #{students[index][:cohort]} cohort"
+      puts "#{students[index][:name].center(20)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(20)} | #{students[index][:cohort]} cohort"
       index += 1
     end
 end
