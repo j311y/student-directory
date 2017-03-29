@@ -55,21 +55,14 @@ def input_students
     else
       puts "Now we have #{@students.count} students"
     end
-    # puts "Any more students to add? (Yes / No)"
-    # add = gets.chomp.downcase
-    #   if !add.include?("no")
-    #     @output
-    #     Exit
-    #   else
-    #     add
-    #   end
-    puts "Next student name: "
+    puts "Next student name or 'Exit':"
     name = gets.chomp.capitalize
+      name == "Exit" ? Exit : name
     puts "Their cohort: "
     cohort = select_cohort
     puts "Age: "
     age = gets.chomp
-    puts"Hobbies: "
+    puts "Hobbies: "
     hobbies = gets.chomp
   end
 
@@ -90,19 +83,24 @@ def print_footer(names)
     puts
     puts "Overall, we have #{names.count} great student".center(110)
     puts
-  elsif names.count > 1
+  else names.count > 1
     puts
     puts "Overall, we have #{names.count} great students".center(110)
-    puts
-  else
-    puts
-    puts "We don't have any students!".center(110)
     puts
   end
 end
 
+def output
+  students = input_students
+  if @students.count > 0
+    print_header
+    print(students)
+    print_footer(students)
+  else
+    puts
+    puts "We dont have any students!".center(110)
+    puts
+  end
+end
 
-students = input_students
-print_header
-print(students)
-print_footer(students)
+output
