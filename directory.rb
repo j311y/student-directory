@@ -13,6 +13,7 @@
 #  {name: "Norman Bates", cohort: :november}
 # ]
 @months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
+
 def print_header
   puts "The students of Villains Academy".center(110)
   puts "--------------------------------".center(110)
@@ -43,7 +44,11 @@ def input_students
     # else
     # students << {name: name, age: age, hobbies: hobbies, cohort: :Unknown}
     # end
-    puts "Now we have #{students.count} students"
+    if students.count == 1
+      puts "Now we have #{students.count} student"
+    else
+      puts "Now we have #{students.count} students"
+    end
     puts "Next student name: "
     name = gets.chomp.capitalize
     puts "Their cohort: "
@@ -57,23 +62,34 @@ def input_students
     puts"Hobbies: "
     hobbies = gets.chomp
   end
-  # return the array of students
+
   students
+
 end
 
 
 def print(students)
     index = 0
     until index == students.count
-      puts "#{students[index][:name].center(20)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(20)} | #{students[index][:cohort]} cohort"
+      puts "#{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(30)} | #{students[index][:cohort]} cohort"
       index += 1
     end
 end
 
 def print_footer(names)
-  puts
-  puts "Overall, we have #{names.count} great students".center(110)
-  puts
+  if names.count == 1
+    puts
+    puts "Overall, we have #{names.count} great student".center(110)
+    puts
+  elsif names.count > 1
+    puts
+    puts "Overall, we have #{names.count} great students".center(110)
+    puts
+  else
+    puts
+    puts "We don't have any students!".center(110)
+    puts
+  end
 end
 # nothing happens until we call the methods
 students = input_students
