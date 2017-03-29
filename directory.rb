@@ -12,8 +12,9 @@
 #  {name: "Joffrey Baratheon", cohort: :november},
 #  {name: "Norman Bates", cohort: :november}
 # ]
-@months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
 
+@months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
+@students = []
 # prints the header text
 def print_header
   puts "The students of Villains Academy".center(110)
@@ -21,18 +22,33 @@ def print_header
 end
 
 def select_cohort
-  cohort = gets.chomp.capitalize.to_sym
-    while !@months.include?(cohort) || cohort.empty?
+  cohort = gets.chomp.downcase.capitalize.to_sym
+    while !@months.include?(cohort)
       puts "That is not a valid Month. Try again:"
-      cohort = gets.chomp.capitalize.to_sym
+      cohort = gets.chomp.downcase.capitalize.to_sym
     end
   cohort
 end
 
+def group_by_cohort
+  puts "Sort students by cohort? (Y/N)"
+  sort = gets.chomp.upcase
+  if sort == "Y"
+    @students.sort_by {}
+  elsif sort == "N"
+    input_students
+  else
+    puts "Invalid input"
+    group_by_cohort
+  end
+end
+
+
 def input_students
-  puts "To exit hit return 3 times"
+  puts "To quit type 'Exit'"
   puts "Please enter the names of the students"
   name = gets.chomp.capitalize
+   name == "Exit" ? Exit : name
   puts "Which cohort are they part of?"
   puts "(Enter 'Month' or 'Unknown')"
   cohort = select_cohort
@@ -41,20 +57,26 @@ def input_students
   puts "What are their hobbies?"
   hobbies = gets.chomp
 
-  students = []
-
   # whil the name is not empty, repeat this code
   while !name.empty? do
     # if !cohort.empty?
-      students << {name: name, age: age, hobbies: hobbies, cohort: cohort}
+      @students << {name: name, age: age, hobbies: hobbies, cohort: cohort}
     # else
     # students << {name: name, age: age, hobbies: hobbies, cohort: :Unknown}
     # end
-    if students.count == 1
-      puts "Now we have #{students.count} student"
+    if @students.count == 1
+      puts "Now we have #{@students.count} student"
     else
-      puts "Now we have #{students.count} students"
+      puts "Now we have #{@students.count} students"
     end
+    # puts "Any more students to add? (Yes / No)"
+    # add = gets.chomp.downcase
+    #   if !add.include?("no")
+    #     @output
+    #     Exit
+    #   else
+    #     add
+    #   end
     puts "Next student name: "
     name = gets.chomp.capitalize
     puts "Their cohort: "
@@ -65,7 +87,7 @@ def input_students
     hobbies = gets.chomp
   end
 
-  students
+  @students
 end
 
 # prints the students and their personal information
@@ -94,8 +116,12 @@ def print_footer(names)
   end
 end
 
-# nothing happens until we call the methods
-students = input_students
-print_header
-print(students)
-print_footer(students)
+def output
+  students = input_students
+  print_header
+  print(students)
+  print_footer(students)
+end
+
+output
+# group_by_cohort
