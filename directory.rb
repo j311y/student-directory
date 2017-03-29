@@ -14,9 +14,19 @@
 # ]
 @months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
 
+# prints the header text
 def print_header
   puts "The students of Villains Academy".center(110)
   puts "--------------------------------".center(110)
+end
+
+def select_cohort
+  cohort = gets.chomp.capitalize.to_sym
+    while !@months.include?(cohort) || cohort.empty?
+      puts "That is not a valid Month. Try again:"
+      cohort = gets.chomp.capitalize.to_sym
+    end
+  cohort
 end
 
 def input_students
@@ -25,11 +35,7 @@ def input_students
   name = gets.chomp.capitalize
   puts "Which cohort are they part of?"
   puts "(Enter 'Month' or 'Unknown')"
-  cohort = gets.chomp.capitalize.to_sym
-    while !@months.include?(cohort)
-      puts "That is not a valid Month. Try again:"
-      cohort = gets.chomp.capitalize.to_sym
-    end
+  cohort = select_cohort
   puts "Please enter their age"
   age = gets.chomp
   puts "What are their hobbies?"
@@ -52,11 +58,7 @@ def input_students
     puts "Next student name: "
     name = gets.chomp.capitalize
     puts "Their cohort: "
-    cohort = gets.chomp.capitalize.to_sym
-      while !@months.include?(cohort) || cohort.empty?
-        puts "That is not a valid Month. Try again:"
-        cohort = gets.chomp.capitalize.to_sym
-      end
+    cohort = select_cohort
     puts "Age: "
     age = gets.chomp
     puts"Hobbies: "
@@ -64,10 +66,9 @@ def input_students
   end
 
   students
-
 end
 
-
+# prints the students and their personal information
 def print(students)
     index = 0
     until index == students.count
@@ -76,6 +77,7 @@ def print(students)
     end
 end
 
+# Prints footer message
 def print_footer(names)
   if names.count == 1
     puts
@@ -91,6 +93,7 @@ def print_footer(names)
     puts
   end
 end
+
 # nothing happens until we call the methods
 students = input_students
 print_header
