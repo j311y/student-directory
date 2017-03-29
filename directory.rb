@@ -14,8 +14,8 @@
 # ]
 
 def print_header
-  puts "The students of Villains Academy"
-  puts "--------------------------------"
+  puts "The students of Villains Academy".center(110)
+  puts "--------------------------------".center(110)
 end
 
 def input_students
@@ -50,13 +50,15 @@ end
 def print(students)
     index = 0
     until index == students.count
-      puts "#{students[index][:name]} | Age: #{students[index][:age]} | Likes: #{students[index][:hobbies]} | #{students[index][:cohort]} cohort"
+      puts "#{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(30)} | #{students[index][:cohort]} cohort"
       index += 1
     end
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts
+  puts "Overall, we have #{names.count} great students".center(110)
+  puts
 end
 # nothing happens until we call the methods
 students = input_students
