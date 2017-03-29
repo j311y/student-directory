@@ -13,7 +13,7 @@
 #  {name: "Norman Bates", cohort: :november}
 # ]
 
-@months = [:Unknown, :January, :Febuary, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
+@months = [:Unknown, :January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
 @students = []
 # prints the header text
 def print_header
@@ -30,32 +30,18 @@ def select_cohort
   cohort
 end
 
-def group_by_cohort
-  puts "Sort students by cohort? (Y/N)"
-  sort = gets.chomp.upcase
-  if sort == "Y"
-    @students.sort_by {}
-  elsif sort == "N"
-    input_students
-  else
-    puts "Invalid input"
-    group_by_cohort
-  end
-end
-
-
 def input_students
   puts "To quit type 'Exit'"
   puts "Please enter the names of the students"
-  name = gets.chomp.capitalize
+  name = gets.delete("\n").capitalize
    name == "Exit" ? Exit : name
   puts "Which cohort are they part of?"
   puts "(Enter 'Month' or 'Unknown')"
   cohort = select_cohort
   puts "Please enter their age"
-  age = gets.chomp
+  age = gets.delete("\n")
   puts "What are their hobbies?"
-  hobbies = gets.chomp
+  hobbies = gets.delete("\n")
 
   # whil the name is not empty, repeat this code
   while !name.empty? do
@@ -89,7 +75,6 @@ def input_students
 
   @students
 end
-
 # prints the students and their personal information
 def print(students)
     index = 0
@@ -116,12 +101,8 @@ def print_footer(names)
   end
 end
 
-def output
-  students = input_students
-  print_header
-  print(students)
-  print_footer(students)
-end
 
-output
-# group_by_cohort
+students = input_students
+print_header
+print(students)
+print_footer(students)
