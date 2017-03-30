@@ -13,12 +13,12 @@
 #  {name: "Norman Bates", cohort: :november}
 # ]
 
-@months = [:Unknown, :January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
+@months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
 @students = []
 # prints the header text
 def print_header
-  puts "The students of Villains Academy".center(110)
-  puts "--------------------------------".center(110)
+  puts "The students of Villains Academy".center(90)
+  puts "--------------------------------".center(90)
 end
 
 def select_cohort
@@ -31,10 +31,9 @@ def select_cohort
 end
 
 def input_students
-  puts "To quit type 'Exit'"
-  puts "Please enter the names of the students"
+  puts "Please enter student name or to quit press enter now"
   name = gets.delete("\n").capitalize
-   name == "Exit" ? Exit : name
+    name.empty? ? Exit : name
   puts "Which cohort are they part of?"
   puts "(Enter 'Month' or 'Unknown')"
   cohort = select_cohort
@@ -55,9 +54,9 @@ def input_students
     else
       puts "Now we have #{@students.count} students"
     end
-    puts "Next student name or 'Exit':"
+    puts "Next student name or leave blank to quit"
     name = gets.chomp.capitalize
-      name == "Exit" ? Exit : name
+      name.empty? ? Exit : name
     puts "Their cohort: "
     cohort = select_cohort
     puts "Age: "
@@ -72,20 +71,36 @@ end
 def print(students)
     index = 0
     until index == students.count
-      puts "#{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(30)} | #{students[index][:cohort]} cohort"
+      puts "#{index+1}. #{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(20)} | #{students[index][:cohort]} cohort"
       index += 1
     end
 end
+
+def print_by_cohort(students)
+  month = students.group_by {|input| input[:cohort]}
+    puts "\n"*2
+    puts "Students listed by cohort".center(90)
+    puts "--------------------------".center(90)
+      month.map do |key, value|
+        puts
+        puts "#{key}".center(90)
+        puts "------------".center(90)
+        for index in 0..value.size-1 do
+      puts "#{index+1}. #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)} |"
+    end
+  end
+end
+
 
 # Prints footer message
 def print_footer(names)
   if names.count == 1
     puts
-    puts "Overall, we have #{names.count} great student".center(110)
+    puts "Overall, we have #{names.count} great student".center(90)
     puts
   else names.count > 1
     puts
-    puts "Overall, we have #{names.count} great students".center(110)
+    puts "Overall, we have #{names.count} great students".center(90)
     puts
   end
 end
@@ -95,10 +110,11 @@ def output
   if @students.count > 0
     print_header
     print(students)
+    print_by_cohort(students)
     print_footer(students)
   else
     puts
-    puts "We dont have any students!".center(110)
+    puts "We dont have any students!".center(90)
     puts
   end
 end
