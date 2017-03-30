@@ -1,23 +1,9 @@
-# lets put all students into an array
-# students = [
-#  {name: "Dr. Hanibal Lecter", cohort: :november},
-#  {name: "Darth Vader", cohort: :november},
-#  {name: "Nurse Ratched", cohort: :november},
-#  {name: "Michael Corleone", cohort: :november},
-#  {name: "Alex DeLarge", cohort: :november},
-#  {name: "The Wicked Witch of the West", cohort: :november},
-#  {name: "Terminator", cohort: :november},
-#  {name: "Freddy Krueger", cohort: :november},
-#  {name: "The Joker", cohort: :november},
-#  {name: "Joffrey Baratheon", cohort: :november},
-#  {name: "Norman Bates", cohort: :november}
-# ]
 @students = []
 
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -62,57 +48,58 @@ def save_students
   file.close
 end
 
-def load_students
+def append_students(name, age, hobbies, cohort)
+  @students << {name: name, age: age, hobbies: hobbies, cohort: cohort.to_sym}
+end
+
+def load_students(filename = "students.csv")
   file = File.open("students.csv", "r")
   file.readlines.each do |line|
     name, age, hobbies, cohort = line.chomp.split(',')
-    @students << {name: name, age: age, hobbies: hobbies, cohort: cohort.to_sym}
+  append_students(name, age, hobbies, cohort)
   end
   file.close
 end
 
-def select_cohort
-  months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
-  cohort = gets.chomp.downcase.capitalize.to_sym
-    while !months.include?(cohort)
-      puts "That is not a valid Month. Try again:"
-      cohort = gets.chomp.downcase.capitalize.to_sym
-    end
-  cohort
-end
-
 def input_students
-  puts "Please enter student name"
-  name = gets.delete("\n").capitalize
+  puts "Please enter student name or 'Enter' to return to menu"
+  name = STDIN.gets.delete("\n").capitalize
+    name.empty? ? interactive_menu : name
   puts "Which cohort are they part of?"
   puts "(Enter a month)"
   cohort = select_cohort
   puts "Please enter their age"
-  age = gets.delete("\n")
+  age = STDIN.gets.delete("\n")
   puts "What are their hobbies?"
-  hobbies = gets.delete("\n")
+  hobbies = STDIN.gets.delete("\n")
 
-  # whil the name is not empty, repeat this code
   while !name.empty? do
-    # if !cohort.empty?
-      @students << {name: name, age: age, hobbies: hobbies, cohort: cohort}
-    # else
-    # students << {name: name, age: age, hobbies: hobbies, cohort: :Unknown}
-    # end
+    append_students(name, age, hobbies, cohort)
     if @students.count == 1
       puts "Now we have #{@students.count} student"
     else
       puts "Now we have #{@students.count} students"
     end
-    puts "Next student name:"
-    name = gets.chomp.capitalize
+    puts "Next student name or 'Enter to return to menu':"
+    name = STDIN.gets.chomp.capitalize
+        name.empty? ? interactive_menu : name
     puts "Their cohort: "
     cohort = select_cohort
     puts "Age: "
-    age = gets.chomp
+    age = STDIN.gets.chomp
     puts "Hobbies: "
-    hobbies = gets.chomp
+    hobbies = STDIN.gets.chomp
   end
+end
+
+def select_cohort
+  months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
+  cohort = STDIN.gets.chomp.downcase.capitalize.to_sym
+    while !months.include?(cohort)
+      puts "That is not a valid Month. Try again:"
+      cohort = STDIN.gets.chomp.downcase.capitalize.to_sym
+    end
+  cohort
 end
 
 # prints the header text
@@ -130,6 +117,7 @@ def print_students(students)
     end
 end
 
+# unused method for organising students into cohorts
 # def print_by_cohort(students)
 #   month = students.group_by {|input| input[:cohort]}
 #     puts "\n"*2
@@ -145,8 +133,6 @@ end
 #   end
 # end
 
-
-# Prints footer message
 def print_footer(names)
   if names.count == 1
     puts
@@ -159,4 +145,16 @@ def print_footer(names)
   end
 end
 
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else puts "Sorry, #{filename} doesn't exist."
+  exit
+  end
+end
+
+try_load_students
 interactive_menu
