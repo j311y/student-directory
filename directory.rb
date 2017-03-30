@@ -12,6 +12,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
+  puts "5. Show students by Cohort"
   puts "9. Exit"
 end
 
@@ -25,6 +26,8 @@ def process(selection)
     save_students
   when "4"
     load_students
+  when "5"
+    print_by_cohort
   when "9"
     exit
   else
@@ -39,13 +42,19 @@ def show_students
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  puts "Which file do you want to save to? ('filename.csv')"
+  user_file = STDIN.gets.chomp
+  file = File.open("#{user_file}", "w")
   @students.each do |student|
     student_data = [student[:name], student[:age], student[:hobbies], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
+  puts
+  puts "***** Students successfully saved to file *****"
+  puts
   file.close
+  mv user_file .gitignore
 end
 
 def append_students(name, age, hobbies, cohort)
@@ -58,6 +67,8 @@ def load_students(filename = "students.csv")
     name, age, hobbies, cohort = line.chomp.split(',')
   append_students(name, age, hobbies, cohort)
   end
+  puts
+  puts "***** File loaded successfully *****"
   file.close
 end
 
@@ -72,6 +83,7 @@ def input_students
   age = STDIN.gets.delete("\n")
   puts "What are their hobbies?"
   hobbies = STDIN.gets.delete("\n")
+  puts "***** Student successfully added *****"
 
   while !name.empty? do
     append_students(name, age, hobbies, cohort)
@@ -80,17 +92,19 @@ def input_students
     else
       puts "Now we have #{@students.count} students"
     end
-    puts "Next student name or 'Enter to return to menu':"
-    name = STDIN.gets.chomp.capitalize
-        name.empty? ? interactive_menu : name
-    puts "Their cohort: "
-    cohort = select_cohort
-    puts "Age: "
-    age = STDIN.gets.chomp
-    puts "Hobbies: "
-    hobbies = STDIN.gets.chomp
+    input_students
   end
 end
+
+# def age_check
+#   numbers = "0123456789"
+#   age = STDIN.gets.chomp
+#     while !age.include?(numbers)
+#      puts "Please enter a valid number"
+#      age = STDIN.gets.chomp.to_s
+#     end
+#    age
+# end
 
 def select_cohort
   months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
@@ -118,20 +132,22 @@ def print_students(students)
 end
 
 # unused method for organising students into cohorts
-# def print_by_cohort(students)
-#   month = students.group_by {|input| input[:cohort]}
-#     puts "\n"*2
-#     puts "Students listed by cohort".center(90)
-#     puts "--------------------------".center(90)
-#       month.map do |key, value|
-#         puts
-#         puts "#{key}".center(90)
-#         puts "------------".center(90)
-#         for index in 0..value.size-1 do
-#       puts "#{index+1}. #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)} |"
-#     end
-#   end
-# end
+def print_by_cohort
+  month = @students.group_by {|input| input[:cohort]}
+    puts "\n"*2
+    puts "Students listed by cohort".center(80)
+    puts "--------------------------".center(80)
+      month.map do |key, value|
+        puts
+        puts "#{key}".center(80)
+        puts "------------".center(80)
+        for index in 0..value.size-1 do
+      print "#{index+1} #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)}"
+      puts
+    end
+    puts
+  end
+end
 
 def print_footer(names)
   if names.count == 1
@@ -149,6 +165,7 @@ def try_load_students
   filename = ARGV.first
   if filename.nil?
     load_students("students.csv")
+    puts "There are #{@students.count} students on file"
   elsif File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
