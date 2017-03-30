@@ -10,8 +10,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a file"
+  puts "4. Load the list from a file"
   puts "5. Show students by Cohort"
   puts "9. Exit"
 end
@@ -42,8 +42,11 @@ def show_students
 end
 
 def save_students
-  puts "Which file do you want to save to? ('filename.csv')"
+  puts "Which file do you want to save to? (Enter for default)"
   user_file = STDIN.gets.chomp
+    if user_file == ""
+      user_file = "students.csv"
+    end
   file = File.open("#{user_file}", "w")
   @students.each do |student|
     student_data = [student[:name], student[:age], student[:hobbies], student[:cohort]]
@@ -51,24 +54,33 @@ def save_students
     file.puts csv_line
   end
   puts
-  puts "***** Students successfully saved to file *****"
+  puts "***** Students successfully saved to #{user_file} *****"
   puts
   file.close
-  mv user_file .gitignore
 end
 
 def append_students(name, age, hobbies, cohort)
   @students << {name: name, age: age, hobbies: hobbies, cohort: cohort.to_sym}
 end
 
-def load_students(filename = "students.csv")
-  file = File.open("students.csv", "r")
+def load_students
+  puts "Which file do you want to load from? (Enter for default)"
+  user_file = STDIN.gets.chomp
+    if user_file == ""
+      user_file = "students.csv"
+    else
+      File.exists?(user_file)
+       if true; puts; puts "***** Sorry, #{user_file} doesn't exist *****"; puts; interactive_menu
+       end
+    end
+  file = File.open("#{user_file}", "r")
   file.readlines.each do |line|
     name, age, hobbies, cohort = line.chomp.split(',')
   append_students(name, age, hobbies, cohort)
   end
   puts
-  puts "***** File loaded successfully *****"
+  puts "***** #{user_file} loaded successfully *****"
+  puts
   file.close
 end
 
@@ -164,7 +176,7 @@ end
 def try_load_students
   filename = ARGV.first
   if filename.nil?
-    load_students("students.csv")
+    filename = "students.csv"
     puts "There are #{@students.count} students on file"
   elsif File.exists?(filename)
     load_students(filename)
