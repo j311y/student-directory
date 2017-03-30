@@ -12,39 +12,44 @@
 #  {name: "Joffrey Baratheon", cohort: :november},
 #  {name: "Norman Bates", cohort: :november}
 # ]
-def interactive_menu
-  @students = []
-  loop do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
+@students = []
 
-    selection = gets.chomp
-    case selection
-    when "1"
-      students = input_students
-    when "2"
-      print_header
-      print(students)
-      print_footer(students)
-    when "9"
-      exit
-    else
-      puts "I don't know what you meant, try again"
-    end
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
   end
 end
 
-@months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
-# prints the header text
-def print_header
-  puts "The students of Villains Academy".center(90)
-  puts "--------------------------------".center(90)
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def process(selection)
+  case selection
+  when "1"
+    input_students
+  when "2"
+    show_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you meant, try again"
+  end
+end
+
+def show_students
+  print_header
+  print_students(@students)
+  print_footer(@students)
 end
 
 def select_cohort
+  months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
   cohort = gets.chomp.downcase.capitalize.to_sym
-    while !@months.include?(cohort)
+    while !months.include?(cohort)
       puts "That is not a valid Month. Try again:"
       cohort = gets.chomp.downcase.capitalize.to_sym
     end
@@ -52,10 +57,10 @@ def select_cohort
 end
 
 def input_students
-  puts "Please enter student name or to quit press enter now"
+  puts "Please enter student name"
   name = gets.delete("\n").capitalize
   puts "Which cohort are they part of?"
-  puts "(Enter 'Month' or 'Unknown')"
+  puts "(Enter a month)"
   cohort = select_cohort
   puts "Please enter their age"
   age = gets.delete("\n")
@@ -74,7 +79,7 @@ def input_students
     else
       puts "Now we have #{@students.count} students"
     end
-    puts "Next student name or leave blank to quit"
+    puts "Next student name:"
     name = gets.chomp.capitalize
     puts "Their cohort: "
     cohort = select_cohort
@@ -83,11 +88,16 @@ def input_students
     puts "Hobbies: "
     hobbies = gets.chomp
   end
-
-  @students
 end
+
+# prints the header text
+def print_header
+  puts "The students of Villains Academy".center(90)
+  puts "--------------------------------".center(90)
+end
+
 # prints the students and their personal information
-def print(students)
+def print_students(students)
     index = 0
     until index == students.count
       puts "#{index+1}. #{students[index][:name].center(30)} | Age: #{students[index][:age].center(5)} | Likes: #{students[index][:hobbies].center(20)} | #{students[index][:cohort]} cohort"
@@ -95,20 +105,20 @@ def print(students)
     end
 end
 
-def print_by_cohort(students)
-  month = students.group_by {|input| input[:cohort]}
-    puts "\n"*2
-    puts "Students listed by cohort".center(90)
-    puts "--------------------------".center(90)
-      month.map do |key, value|
-        puts
-        puts "#{key}".center(90)
-        puts "------------".center(90)
-        for index in 0..value.size-1 do
-      puts "#{index+1}. #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)} |"
-    end
-  end
-end
+# def print_by_cohort(students)
+#   month = students.group_by {|input| input[:cohort]}
+#     puts "\n"*2
+#     puts "Students listed by cohort".center(90)
+#     puts "--------------------------".center(90)
+#       month.map do |key, value|
+#         puts
+#         puts "#{key}".center(90)
+#         puts "------------".center(90)
+#         for index in 0..value.size-1 do
+#       puts "#{index+1}. #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)} |"
+#     end
+#   end
+# end
 
 
 # Prints footer message
@@ -124,19 +134,4 @@ def print_footer(names)
   end
 end
 
-# def output
-#   students = input_students
-#   if @students.count > 0
-#     print_header
-#     print(students)
-#     print_by_cohort(students)
-#     print_footer(students)
-#   else
-#     puts
-#     puts "We dont have any students!".center(90)
-#     puts
-#   end
-# end
-#
-# output
 interactive_menu
