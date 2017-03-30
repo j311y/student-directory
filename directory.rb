@@ -10,10 +10,11 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to a file"
+  puts "3. Show students by cohort"
   puts "4. Load the list from a file"
-  puts "5. Show students by Cohort"
+  puts "5. Save the list to a file"
   puts "9. Exit"
+  prompt
 end
 
 def process(selection)
@@ -23,11 +24,11 @@ def process(selection)
   when "2"
     show_students
   when "3"
-    save_students
+    print_by_cohort
   when "4"
     load_students
   when "5"
-    print_by_cohort
+    save_students
   when "9"
     exit
   else
@@ -43,6 +44,7 @@ end
 
 def save_students
   puts "Which file do you want to save to? (Enter for default)"
+  prompt
   user_file = STDIN.gets.chomp
     if user_file == ""
       user_file = "students.csv"
@@ -65,6 +67,7 @@ end
 
 def load_students
   puts "Which file do you want to load from? (Enter for default)"
+  prompt
   user_file = STDIN.gets.chomp
     if user_file == ""
       user_file = "students.csv"
@@ -86,14 +89,18 @@ end
 
 def input_students
   puts "Please enter student name or 'Enter' to return to menu"
+  prompt
   name = STDIN.gets.delete("\n").capitalize
     name.empty? ? interactive_menu : name
   puts "Which cohort are they part of?"
   puts "(Enter a month)"
+  prompt
   cohort = select_cohort
   puts "Please enter their age"
+  prompt
   age = STDIN.gets.delete("\n")
   puts "What are their hobbies?"
+  prompt
   hobbies = STDIN.gets.delete("\n")
   puts "***** Student successfully added *****"
 
@@ -123,6 +130,7 @@ def select_cohort
   cohort = STDIN.gets.chomp.downcase.capitalize.to_sym
     while !months.include?(cohort)
       puts "That is not a valid Month. Try again:"
+      prompt
       cohort = STDIN.gets.chomp.downcase.capitalize.to_sym
     end
   cohort
@@ -186,6 +194,9 @@ def try_load_students
   end
 end
 
+def prompt
+  print "=> "
+end
 
 try_load_students
 interactive_menu
