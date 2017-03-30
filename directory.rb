@@ -12,9 +12,30 @@
 #  {name: "Joffrey Baratheon", cohort: :november},
 #  {name: "Norman Bates", cohort: :november}
 # ]
+def interactive_menu
+  @students = []
+  loop do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+
+    selection = gets.chomp
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header
+      print(students)
+      print_footer(students)
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+    end
+  end
+end
 
 @months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
-@students = []
 # prints the header text
 def print_header
   puts "The students of Villains Academy".center(90)
@@ -33,7 +54,6 @@ end
 def input_students
   puts "Please enter student name or to quit press enter now"
   name = gets.delete("\n").capitalize
-    name.empty? ? Exit : name
   puts "Which cohort are they part of?"
   puts "(Enter 'Month' or 'Unknown')"
   cohort = select_cohort
@@ -56,7 +76,6 @@ def input_students
     end
     puts "Next student name or leave blank to quit"
     name = gets.chomp.capitalize
-      name.empty? ? Exit : name
     puts "Their cohort: "
     cohort = select_cohort
     puts "Age: "
@@ -105,18 +124,19 @@ def print_footer(names)
   end
 end
 
-def output
-  students = input_students
-  if @students.count > 0
-    print_header
-    print(students)
-    print_by_cohort(students)
-    print_footer(students)
-  else
-    puts
-    puts "We dont have any students!".center(90)
-    puts
-  end
-end
-
-output
+# def output
+#   students = input_students
+#   if @students.count > 0
+#     print_header
+#     print(students)
+#     print_by_cohort(students)
+#     print_footer(students)
+#   else
+#     puts
+#     puts "We dont have any students!".center(90)
+#     puts
+#   end
+# end
+#
+# output
+interactive_menu
