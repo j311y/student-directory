@@ -1,6 +1,7 @@
 require 'csv'
 @students = []
 
+# outputs a user friendly menu
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
@@ -51,6 +52,7 @@ def show_students
   print_footer(@students)
 end
 
+# save students to a user designated file
 def save_students
   puts "Which file do you want to save to? (Enter for default)"
   prompt
@@ -73,6 +75,7 @@ def append_students(name, age, hobbies, cohort)
   @students << {name: name, age: age, hobbies: hobbies, cohort: cohort.to_sym}
 end
 
+# load students from a user designated file
 def load_students
   puts "Which file do you want to load from? (Enter for default)"
   prompt
@@ -93,6 +96,7 @@ def load_students
   }
 end
 
+# includes student name, age, hobbies and their cohort
 def input_students
   puts "Please enter student name or 'Enter' to return to menu"
   prompt
@@ -108,7 +112,7 @@ def input_students
   puts "What are their hobbies?"
   prompt
   hobbies = STDIN.gets.delete("\n")
-  puts "***** Student successfully added *****"
+  ln; puts "***** Student successfully added *****"; ln
 
   while !name.empty? do
     append_students(name, age, hobbies, cohort)
@@ -121,16 +125,7 @@ def input_students
   end
 end
 
-# def age_check
-#   numbers = "0123456789"
-#   age = STDIN.gets.chomp
-#     while !age.include?(numbers)
-#      puts "Please enter a valid number"
-#      age = STDIN.gets.chomp.to_s
-#     end
-#    age
-# end
-
+# so user can only select a month as a cohort value
 def select_cohort
   months = [:January, :February, :March, :April, :May, :June, :July, :August, :September, :October, :November, :December,]
   cohort = STDIN.gets.chomp.downcase.capitalize.to_sym
@@ -157,6 +152,7 @@ def print_students(students)
     end
 end
 
+# prints the students by their cohort
 def print_by_cohort
   month = @students.group_by {|input| input[:cohort]}
     ln; ln
@@ -166,12 +162,13 @@ def print_by_cohort
         ln; puts "#{key}".center(80)
         puts "------------".center(80)
         for index in 0..value.size-1 do
-      print "#{index+1} #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)}"; ln
+      print "#{index+1}. #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)}"; ln
     end
     ln
   end
 end
 
+# footer with total student count
 def print_footer(names)
   if names.count == 1
     ln; puts "Overall, we have #{names.count} great student".center(90); ln
@@ -180,6 +177,7 @@ def print_footer(names)
   end
 end
 
+# automatically loads students from command line
 def try_load_students
   filename = ARGV.first
   if filename.nil?
