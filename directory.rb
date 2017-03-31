@@ -1,13 +1,6 @@
 require 'csv'
 @students = []
 
-def interactive_menu
-  loop do
-    print_menu
-    process(STDIN.gets.chomp)
-  end
-end
-
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
@@ -16,6 +9,21 @@ def print_menu
   puts "5. Save the list to a file"
   puts "9. Exit"
   prompt
+
+end
+def interactive_menu
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+def prompt
+  print "=> "
+end
+
+def ln
+  print ("\n")
 end
 
 def process(selection)
@@ -33,7 +41,7 @@ def process(selection)
   when "9"
     exit
   else
-    puts "I don't know what you meant, try again"
+    ln; puts "***** I don't know what you meant, try again *****"; ln
   end
 end
 
@@ -56,10 +64,9 @@ def save_students
       student.each_value {|x| student_data << x }
       csv << student_data
     end
-  puts
-  puts "***** Students successfully saved to #{user_file} *****"
-  puts
   }
+  ln; puts "***** Students successfully saved to #{user_file} *****"; ln
+
 end
 
 def append_students(name, age, hobbies, cohort)
@@ -77,14 +84,12 @@ def load_students
        if true; puts; puts "***** Sorry, #{user_file} doesn't exist *****"; puts; interactive_menu
        end
     end
-  File.open("#{user_file}", "r") { |file|
-  file.readlines.each do |line|
-    name, age, hobbies, cohort = line.chomp.split(',')
-  append_students(name, age, hobbies, cohort)
+  CSV.open(user_file, "r") { |csv|
+  CSV.foreach(user_file) do |row|
+    name, age, hobbies, cohort = row
+    append_students(name, age, hobbies, cohort)
   end
-  puts
-  puts "***** #{user_file} loaded successfully *****"
-  puts
+  ln; puts "***** #{user_file} loaded successfully *****"; ln
   }
 end
 
@@ -139,7 +144,7 @@ end
 
 # prints the header text
 def print_header
-  puts "The students of Villains Academy".center(90)
+  ln; puts "The students of Villains Academy".center(90)
   puts "--------------------------------".center(90)
 end
 
@@ -152,33 +157,26 @@ def print_students(students)
     end
 end
 
-# unused method for organising students into cohorts
 def print_by_cohort
   month = @students.group_by {|input| input[:cohort]}
-    puts "\n"*2
+    ln; ln
     puts "Students listed by cohort".center(80)
     puts "--------------------------".center(80)
       month.map do |key, value|
-        puts
-        puts "#{key}".center(80)
+        ln; puts "#{key}".center(80)
         puts "------------".center(80)
         for index in 0..value.size-1 do
-      print "#{index+1} #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)}"
-      puts
+      print "#{index+1} #{value[index][:name].center(30)} | Age: #{value[index][:age].center(5)} | Likes: #{value[index][:hobbies].center(20)}"; ln
     end
-    puts
+    ln
   end
 end
 
 def print_footer(names)
   if names.count == 1
-    puts
-    puts "Overall, we have #{names.count} great student".center(90)
-    puts
+    ln; puts "Overall, we have #{names.count} great student".center(90); ln
   else names.count > 1
-    puts
-    puts "Overall, we have #{names.count} great students".center(90)
-    puts
+    ln; puts "Overall, we have #{names.count} great students".center(90); ln
   end
 end
 
@@ -193,10 +191,6 @@ def try_load_students
   else puts "Sorry, #{filename} doesn't exist."
   exit
   end
-end
-
-def prompt
-  print "=> "
 end
 
 try_load_students
